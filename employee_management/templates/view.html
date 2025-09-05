@@ -1,0 +1,247 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>View Employee Details</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500&family=Roboto:wght@500;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    
+    <link href="{% static 'lib/animate/animate.min.css' %}" rel="stylesheet">
+    <link href="{% static 'lib/owlcarousel/assets/owl.carousel.min.css' %}" rel="stylesheet">
+    <link href="{% static 'lib/lightbox/css/lightbox.min.css' %}" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+
+    <style>
+        /* Animate table rows on hover */
+        table tbody tr:hover {
+            background-color: #343a40;
+            transform: scale(1.02);
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+    
+        /* Smooth table entrance */
+        .table {
+            animation: fadeIn 1s ease-in-out;
+        }
+    
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+    
+        /* Delete Button Hover Effect */
+        .btn-danger:hover {
+            transform: scale(1.1);
+            background-color: #dc3545;
+            transition: all 0.3s ease;
+        }
+    
+        /* Alert Animation */
+        .alert {
+            animation: slideDown 0.7s ease;
+        }
+    
+        @keyframes slideDown {
+            from {opacity: 0; transform: translateY(-20px);}
+            to {opacity: 1; transform: translateY(0);}
+        }
+    
+        /* Spinner smoother */
+        #spinner .spinner-border {
+            animation: spin 1.5s linear infinite;
+        }
+    
+        @keyframes spin {
+            0% { transform: rotate(0deg);}
+            100% { transform: rotate(360deg);}
+        }
+    </style>
+    
+    
+</head>
+
+<body>
+    <!-- Spinner Start -->
+    <div id="spinner"
+        class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+        <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;"></div>
+    </div>
+    <!-- Spinner End -->
+
+
+    <!-- Topbar Start -->
+    <div class="container-fluid bg-primary text-white d-none d-lg-flex">
+        <div class="container py-3">
+            <div class="d-flex align-items-center">
+                <a href="index.html">
+                    <h2 class="text-white fw-bold m-0">All Employees</h2>
+                </a>
+                <div class="ms-auto d-flex align-items-center">
+                    <small class="ms-4"><i class="fa fa-map-marker-alt me-3"></i>Indore, India</small>
+                    <small class="ms-4"><i class="fa fa-envelope me-3"></i>employeehub@gmail.com</small>
+                    <small class="ms-4"><i class="fa fa-phone-alt me-3"></i>+91 98765 43210</small>
+                    <div class="ms-3 d-flex">
+                        <a class="btn btn-sm-square btn-light text-primary rounded-circle ms-2" href=""><i
+                                class="fab fa-facebook-f"></i></a>
+                        <a class="btn btn-sm-square btn-light text-primary rounded-circle ms-2" href=""><i
+                                class="fab fa-twitter"></i></a>
+                        <a class="btn btn-sm-square btn-light text-primary rounded-circle ms-2" href=""><i
+                                class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Topbar End -->
+
+
+    <!-- Navbar Start -->
+    <div class="container-fluid bg-white sticky-top">
+        <div class="container">
+            <nav class="navbar navbar-expand-lg bg-white navbar-light p-lg-0">
+                <a href="index.html" class="navbar-brand d-lg-none">
+                    <h1 class="fw-bold m-0">EmployeeHub</h1>
+                </a>
+                <button type="button" class="navbar-toggler me-0" data-bs-toggle="collapse"
+                    data-bs-target="#navbarCollapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <div class="navbar-nav">
+                        <a href="{% url 'index' %}" class="nav-item nav-link">Home</a>
+                        <a href="{% url 'all' %}" class="nav-item nav-link">View All Employees</a>
+                        <a href="{% url 'add' %}" class="nav-item nav-link">Add an Employees</a>
+                        <a href="{% url 'remove' %}" class="nav-item nav-link">Remove an Employee</a>
+
+                        <a href="{% url 'filter' %}" class="nav-item nav-link">Filter Employee Details</a>
+                    </div>
+                    <div class="ms-auto d-none d-lg-block">
+                    
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </div>
+    <!-- Navbar End -->
+
+  
+
+    <!-- Page Header Start -->
+
+    <div class="container">
+
+        {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+    
+    <table class="table table-light table-striped table-hover align-middle text-center">
+
+        <thead>
+          <tr class = "rounded rounded-3">
+            <th scope="col">S.No.</th>
+            <th scope="col">First Name</th>
+            <th scope="col">Last Name</th>
+            <th scope="col">Salary</th>
+            <th scope="col">Bonus</th>
+            <th scope="col">Phone Number</th>
+            <th scope="col">Role</th>
+            <th scope="col">Department</th>
+            <th scope="col">Location</th>
+            <th scope="col">Hire date</th>
+            <th scope="col">Action</th>
+          </tr>
+        </thead>
+        {% for emp in emps%}
+        <tbody>
+          <tr>
+            <th scope="row">{{forloop.counter}}</th> {% comment %} changed {{emp.id}} to {{forloop.counter}} beacuse in case if we delete a employee so it will start the serial no. from previous s.no {% endcomment %}
+            <td>{{emp.first_name}}</td>
+            <td>{{emp.last_name}}</td>
+            <td>{{emp.salary}}</td>
+            <td>{{emp.bonus}}</td>
+            <td>{{emp.phone}}</td>
+            <td>{{emp.role.name}}</td>
+            <td>{{emp.dept.name}}</td>
+            <td>{{emp.location}}</td>
+            <td>{{emp.hire_date}}</td>
+            <td><a href="{% url 'remove_employee' emp.id %}"><button type="button" onclick="return confirm('This user will be deleted. Are you sure?')" class="btn btn-danger">Delete</button> </a></td>
+          
+
+           
+             
+          </tr>
+          
+        </tbody>
+        {% endfor %}
+      </table>
+   
+  </div>
+   <!-- Page Header End -->
+
+
+
+    <!-- Copyright Start -->
+    <div class="container-fluid copyright py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                    &copy; <a class="fw-medium text-light" href="#">EmployeeHub</a>, All Right Reserved.
+                </div>
+                
+                
+            </div>
+        </div>
+    </div>
+    <!-- Copyright End -->
+
+
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square rounded-circle back-to-top"><i
+            class="bi bi-arrow-up"></i></a>
+
+
+    <!-- JavaScript Libraries -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'lib/wow/wow.min.js' %}"></script>
+    <script src="{% static 'lib/easing/easing.min.js' %}"></script>
+    <script src="{% static 'lib/waypoints/waypoints.min.js' %}"></script>
+    <script src="{% static 'lib/owlcarousel/owl.carousel.min.js' %}"></script>
+    <script src="{% static 'lib/lightbox/js/lightbox.min.js' %}"></script>
+
+    <!-- Template Javascript -->
+    <script src="{% static 'js/main.js' %}"></script>
+</body>
+
+</html>
